@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.NativeHttpServerSimp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApiSimple", "AspNet.MinimalApiSimple\AspNet.MinimalApiSimple.csproj", "{913992C2-CC52-4607-8EC2-E9E62822128D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApiWithFront", "AspNet.MinimalApiWithFront\AspNet.MinimalApiWithFront.csproj", "{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +33,9 @@ Global
 		{913992C2-CC52-4607-8EC2-E9E62822128D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{913992C2-CC52-4607-8EC2-E9E62822128D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{913992C2-CC52-4607-8EC2-E9E62822128D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

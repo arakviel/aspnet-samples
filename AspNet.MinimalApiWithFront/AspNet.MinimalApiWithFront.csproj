@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyTitle>CRUD Демонстрація - Управління Товарами</AssemblyTitle>
+        <Product>AspNet.MinimalApiWithFront</Product>
+        <Description>Демонстрація CRUD операцій з використанням ASP.NET Minimal API та TypeScript</Description>
+        <Copyright>© 2025</Copyright>
+        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+
+        <!-- Налаштування для розробки -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+        <!-- Налаштування для статичних файлів -->
+        <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+
+        <!-- Налаштування для Hot Reload -->
+        <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
+    </PropertyGroup>
+
+    <!-- Пакети Entity Framework -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.6" />
+    </ItemGroup>
+
+    <!-- Виключення node_modules та dist з проєкту -->
+    <ItemGroup>
+        <Content Remove="wwwroot\node_modules\**" />
+        <Content Remove="wwwroot\dist\**" />
+        <None Remove="wwwroot\node_modules\**" />
+        <None Remove="wwwroot\dist\**" />
+    </ItemGroup>
+
+    <!-- Додаткові файли для відображення в Rider -->
+    <ItemGroup>
+        <None Include="README.md" />
+        <None Include="test-api.sh" />
+        <None Include="wwwroot\package.json" />
+        <None Include="wwwroot\tsconfig.json" />
+        <None Include="wwwroot\vite.config.ts" />
+    </ItemGroup>
+
+    <!-- Налаштування для запуску в Rider -->
+    <ItemGroup>
+        <Content Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Update="appsettings.Development.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>
