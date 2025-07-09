@@ -1,0 +1,302 @@
+### Movies API - Демонстрація всіх endpoints та помилок
+### Базовий URL: http://localhost:5049
+
+#####################################
+### 1. ПОШУК ФІЛЬМІВ - Успішні запити
+#####################################
+
+### Пошук фільмів за назвою
+GET http://localhost:5049/api/movies/search?s=Dark
+Accept: application/json
+
+### Пошук з пагінацією
+GET http://localhost:5049/api/movies/search?s=The&page=1
+Accept: application/json
+
+### Отримання всіх фільмів (порожній пошук) - перша сторінка (10 фільмів)
+GET http://localhost:5049/api/movies/search?s=
+Accept: application/json
+
+### Пагінація - друга сторінка (останні 5 фільмів з 15)
+GET http://localhost:5049/api/movies/search?s=&page=2
+Accept: application/json
+
+### Пагінація - третя сторінка (порожня, оскільки всього 15 фільмів)
+GET http://localhost:5049/api/movies/search?s=&page=3
+Accept: application/json
+
+### Пошук фільмів 1994 року з пагінацією
+GET http://localhost:5049/api/movies/search?s=1994&page=1
+Accept: application/json
+
+#####################################
+### 2. ПОШУК ФІЛЬМІВ - Помилки
+#####################################
+
+### Помилка валідації: некоректна сторінка (менше 1)
+GET http://localhost:5049/api/movies/search?s=Dark&page=0
+Accept: application/json
+
+### Помилка валідації: від'ємна сторінка
+GET http://localhost:5049/api/movies/search?s=Dark&page=-1
+Accept: application/json
+
+#####################################
+### 3. ОТРИМАННЯ ДЕТАЛЕЙ ФІЛЬМУ - Успішні запити
+#####################################
+
+### Отримання деталей існуючого фільму
+GET http://localhost:5049/api/movies/tt0468569
+Accept: application/json
+
+### Отримання деталей іншого фільму
+GET http://localhost:5049/api/movies/tt0111161
+Accept: application/json
+
+#####################################
+### 4. ОТРИМАННЯ ДЕТАЛЕЙ ФІЛЬМУ - Помилки
+#####################################
+
+### 404 Not Found: неіснуючий IMDB ID
+GET http://localhost:5049/api/movies/tt9999999
+Accept: application/json
+
+### 400 Bad Request: порожній IMDB ID
+GET http://localhost:5049/api/movies/
+Accept: application/json
+
+### 400 Bad Request: некоректний IMDB ID
+GET http://localhost:5049/api/movies/   
+Accept: application/json
+
+#####################################
+### 5. СТВОРЕННЯ ФІЛЬМУ - Успішні запити
+#####################################
+
+### Створення нового фільму
+POST http://localhost:5049/api/movies
+Content-Type: application/json
+
+{
+  "title": "Blade Runner 2049",
+  "year": "2017",
+  "imdbId": "tt1856101",
+  "type": "movie",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_SX300.jpg",
+  "rated": "R",
+  "released": "06 Oct 2017",
+  "runtime": "164 min",
+  "genre": "Action, Drama, Mystery",
+  "director": "Denis Villeneuve",
+  "writer": "Hampton Fancher, Michael Green",
+  "actors": "Ryan Gosling, Harrison Ford, Ana de Armas",
+  "plot": "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard.",
+  "language": "English, Finnish, Japanese",
+  "country": "United States, Hungary, Canada",
+  "awards": "Won 2 Oscars",
+  "imdbRating": 8.0,
+  "imdbVotes": "500,000"
+}
+
+#####################################
+### 6. СТВОРЕННЯ ФІЛЬМУ - Помилки
+#####################################
+
+### 400 Bad Request: валідаційні помилки (всі поля порожні)
+POST http://localhost:5049/api/movies
+Content-Type: application/json
+
+{
+  "title": "",
+  "year": "",
+  "imdbId": "",
+  "imdbRating": 15
+}
+
+### 400 Bad Request: некоректний рейтинг
+POST http://localhost:5049/api/movies
+Content-Type: application/json
+
+{
+  "title": "Test Movie",
+  "year": "2023",
+  "imdbId": "tt1234567",
+  "imdbRating": -5
+}
+
+### 409 Conflict: спроба створити фільм, який вже існує
+POST http://localhost:5049/api/movies
+Content-Type: application/json
+
+{
+  "title": "The Dark Knight",
+  "year": "2008",
+  "imdbId": "tt0468569",
+  "type": "movie",
+  "imdbRating": 9.0
+}
+
+### 400 Bad Request: некоректний JSON
+POST http://localhost:5049/api/movies
+Content-Type: application/json
+
+{
+  "title": "Test Movie"
+  "year": "2023"
+  // Некоректний JSON - відсутня кома
+}
+
+#####################################
+### 7. ОНОВЛЕННЯ ФІЛЬМУ - Успішні запити
+#####################################
+
+### Оновлення існуючого фільму (ID = 1)
+PUT http://localhost:5049/api/movies/1
+Content-Type: application/json
+
+{
+  "title": "The Shawshank Redemption (Updated)",
+  "year": "1994",
+  "imdbId": "tt0111161",
+  "type": "movie",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg",
+  "rated": "R",
+  "released": "14 Oct 1994",
+  "runtime": "142 min",
+  "genre": "Drama",
+  "director": "Frank Darabont",
+  "writer": "Stephen King, Frank Darabont",
+  "actors": "Tim Robbins, Morgan Freeman, Bob Gunton",
+  "plot": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency. (Updated)",
+  "language": "English",
+  "country": "United States",
+  "awards": "Nominated for 7 Oscars",
+  "imdbRating": 9.4,
+  "imdbVotes": "2,600,000"
+}
+
+#####################################
+### 8. ОНОВЛЕННЯ ФІЛЬМУ - Помилки
+#####################################
+
+### 404 Not Found: неіснуючий ID
+PUT http://localhost:5049/api/movies/999
+Content-Type: application/json
+
+{
+  "title": "Non-existent Movie",
+  "year": "2023",
+  "imdbId": "tt9999999",
+  "imdbRating": 8.0
+}
+
+### 400 Bad Request: некоректний ID (0)
+PUT http://localhost:5049/api/movies/0
+Content-Type: application/json
+
+{
+  "title": "Test Movie",
+  "year": "2023",
+  "imdbId": "tt1234567",
+  "imdbRating": 8.0
+}
+
+### 400 Bad Request: від'ємний ID
+PUT http://localhost:5049/api/movies/-1
+Content-Type: application/json
+
+{
+  "title": "Test Movie",
+  "year": "2023",
+  "imdbId": "tt1234567",
+  "imdbRating": 8.0
+}
+
+### 400 Bad Request: валідаційні помилки при оновленні
+PUT http://localhost:5049/api/movies/1
+Content-Type: application/json
+
+{
+  "title": "",
+  "year": "",
+  "imdbId": "",
+  "imdbRating": 25
+}
+
+#####################################
+### 9. ВИДАЛЕННЯ ФІЛЬМУ - Успішні запити
+#####################################
+
+### Видалення фільму (спочатку створимо тестовий)
+POST http://localhost:5049/api/movies
+Content-Type: application/json
+
+{
+  "title": "Test Movie for Deletion",
+  "year": "2023",
+  "imdbId": "tt9999998",
+  "type": "movie",
+  "imdbRating": 7.0
+}
+
+### Видалення створеного фільму (замініть ID на отриманий з попереднього запиту)
+DELETE http://localhost:5049/api/movies/8
+Accept: application/json
+
+#####################################
+### 10. ВИДАЛЕННЯ ФІЛЬМУ - Помилки
+#####################################
+
+### 404 Not Found: спроба видалити неіснуючий фільм
+DELETE http://localhost:5049/api/movies/999
+Accept: application/json
+
+### 400 Bad Request: некоректний ID (0)
+DELETE http://localhost:5049/api/movies/0
+Accept: application/json
+
+### 400 Bad Request: від'ємний ID
+DELETE http://localhost:5049/api/movies/-1
+Accept: application/json
+
+#####################################
+### 11. ТЕСТУВАННЯ СТАТИЧНИХ ФАЙЛІВ
+#####################################
+
+### Головна сторінка
+GET http://localhost:5049/
+Accept: text/html
+
+### Прямий доступ до index.html
+GET http://localhost:5049/index.html
+Accept: text/html
+
+### CSS файл
+GET http://localhost:5049/src/style.css
+Accept: text/css
+
+#####################################
+### 12. ТЕСТУВАННЯ НЕІСНУЮЧИХ ENDPOINTS
+#####################################
+
+### 404 Not Found: неіснуючий endpoint
+GET http://localhost:5049/api/nonexistent
+Accept: application/json
+
+### 405 Method Not Allowed: неправильний HTTP метод
+PATCH http://localhost:5049/api/movies/1
+Content-Type: application/json
+
+{
+  "title": "Test"
+}
+
+#####################################
+### ПРИМІТКИ:
+### 
+### 1. Всі помилки повертаються у форматі RFC Problem Details
+### 2. Логування відбувається на всіх рівнях (Repository, Service, API)
+### 3. Кастомні винятки автоматично мапляться на відповідні HTTP коди
+### 4. Валідація працює як на рівні моделі, так і на рівні бізнес-логіки
+### 5. UseExceptionHandler забезпечує централізовану обробку помилок
+#####################################

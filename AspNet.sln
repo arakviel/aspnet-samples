@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.NativeHttpServer", "AspNet.NativeHttpServer\AspNet.NativeHttpServer.csproj", "{322387A5-B91C-43E9-A567-7754DEECAE93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.NativeHttpServer.Tests", "AspNet.NativeHttpServer.Tests\AspNet.NativeHttpServer.Tests.csproj", "{6E66C588-3D0A-4913-9C62-0572FC0C3488}"
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApiSimple", "AspNet.MinimalApiSimple\AspNet.MinimalApiSimple.csproj", "{913992C2-CC52-4607-8EC2-E9E62822128D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApiWithFront", "AspNet.MinimalApiWithFront\AspNet.MinimalApiWithFront.csproj", "{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.Movies", "AspNet.MinimalApi.Movies\AspNet.MinimalApi.Movies.csproj", "{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,5 +39,9 @@ Global
 		{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CE1DA7E-6157-4BB6-AB14-EB939B4E33F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
