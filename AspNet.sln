@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApiWithFront"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.Movies", "AspNet.MinimalApi.Movies\AspNet.MinimalApi.Movies.csproj", "{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.CustomAuth", "AspNet.MinimalApi.CustomAuth\AspNet.MinimalApi.CustomAuth.csproj", "{B75DFE72-A8D2-4D21-841C-365719758B8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.SimpleAuth", "AspNet.MinimalApi.SimpleAuth\AspNet.MinimalApi.SimpleAuth.csproj", "{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,5 +47,13 @@ Global
 		{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82334883-DFD4-4DB7-A4D8-F3845CEF26A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75DFE72-A8D2-4D21-841C-365719758B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75DFE72-A8D2-4D21-841C-365719758B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75DFE72-A8D2-4D21-841C-365719758B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75DFE72-A8D2-4D21-841C-365719758B8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

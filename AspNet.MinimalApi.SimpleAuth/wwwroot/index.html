@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Auth Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .tab-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            margin-right: 5px;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab-btn.active {
+            background-color: #007bff;
+            color: white;
+            border-bottom: 1px solid #007bff;
+        }
+        .tab-content {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 0 4px 4px 4px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Cookie Authentication Demo</h1>
+
+        <!-- Вкладки -->
+        <div style="margin-bottom: 20px;">
+            <button onclick="showTab('login')" id="loginTab" class="tab-btn active">Вхід</button>
+            <button onclick="showTab('register')" id="registerTab" class="tab-btn">Реєстрація</button>
+        </div>
+
+        <!-- Форма входу -->
+        <div id="loginForm" class="tab-content">
+            <div class="form-group">
+                <label for="loginUsername">Ім'я користувача:</label>
+                <input type="text" id="loginUsername" placeholder="Введіть ваше ім'я">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Пароль:</label>
+                <input type="password" id="loginPassword" placeholder="Введіть пароль">
+            </div>
+            <button onclick="login()">Увійти</button>
+        </div>
+
+        <!-- Форма реєстрації -->
+        <div id="registerForm" class="tab-content" style="display: none;">
+            <div class="form-group">
+                <label for="regUsername">Ім'я користувача:</label>
+                <input type="text" id="regUsername" placeholder="Мінімум 3 символи">
+            </div>
+            <div class="form-group">
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label for="regPassword">Пароль:</label>
+                <input type="password" id="regPassword" placeholder="Мінімум 6 символів">
+            </div>
+            <button onclick="register()">Зареєструватися</button>
+        </div>
+
+        <!-- Кнопки дій -->
+        <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <button onclick="logout()" class="logout-btn">Вийти</button>
+            <button onclick="checkProtected()">Перевірити захищений ресурс</button>
+            <button onclick="viewUsers()">Переглянути користувачів</button>
+        </div>
+
+        <div id="status"></div>
+
+        <!-- Інформація про тестових користувачів -->
+        <div style="margin-top: 30px; padding: 15px; background-color: #e9ecef; border-radius: 4px;">
+            <h3>Тестові користувачі:</h3>
+            <p><strong>admin</strong> / admin123</p>
+            <p><strong>user</strong> / user123</p>
+            <p><strong>test</strong> / test123</p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Приховуємо всі вкладки
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+
+            // Видаляємо активний клас з усіх кнопок
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('registerTab').classList.remove('active');
+
+            // Показуємо потрібну вкладку
+            document.getElementById(tabName + 'Form').style.display = 'block';
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        async function register() {
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (!username || !email || !password) {
+                showStatus('Будь ласка, заповніть всі поля', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    showStatus(result.message, 'success');
+                    // Очищуємо форму
+                    document.getElementById('regUsername').value = '';
+                    document.getElementById('regEmail').value = '';
+                    document.getElementById('regPassword').value = '';
+                    // Переключаємося на вкладку входу
+                    showTab('login');
+                } else {
+                    showStatus(result.message || 'Помилка реєстрації', 'error');
+                }
+            } catch (error) {
+                showStatus('Помилка з\'єднання', 'error');
+            }
+        }
+
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                showStatus('Будь ласка, введіть ім\'я користувача та пароль', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    showStatus(result.message, 'success');
+                    // Очищуємо форму
+                    document.getElementById('loginUsername').value = '';
+                    document.getElementById('loginPassword').value = '';
+                } else {
+                    showStatus(result.message || 'Помилка входу', 'error');
+                }
+            } catch (error) {
+                showStatus('Помилка з\'єднання', 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    showStatus('Успішно вийшли з системи', 'success');
+                    document.getElementById('username').value = '';
+                } else {
+                    showStatus('Помилка виходу', 'error');
+                }
+            } catch (error) {
+                showStatus('Помилка з\'єднання', 'error');
+            }
+        }
+
+        async function checkProtected() {
+            try {
+                const response = await fetch('/protected');
+                const result = await response.text();
+
+                if (response.ok) {
+                    showStatus(result, 'success');
+                } else {
+                    showStatus(result, 'error');
+                }
+            } catch (error) {
+                showStatus('Помилка з\'єднання', 'error');
+            }
+        }
+
+        async function viewUsers() {
+            try {
+                const response = await fetch('/users');
+
+                if (response.ok) {
+                    const users = await response.json();
+                    let usersList = '<h4>Зареєстровані користувачі:</h4><ul>';
+                    users.forEach(user => {
+                        usersList += `<li><strong>${user.username}</strong> (${user.email}) - ${new Date(user.createdAt).toLocaleDateString()}</li>`;
+                    });
+                    usersList += '</ul>';
+                    showStatus(usersList, 'success');
+                } else {
+                    const error = await response.text();
+                    showStatus(error || 'Немає доступу до списку користувачів', 'error');
+                }
+            } catch (error) {
+                showStatus('Помилка з\'єднання', 'error');
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = message;
+            statusDiv.className = `status ${type}`;
+        }
+    </script>
+</body>
+</html>

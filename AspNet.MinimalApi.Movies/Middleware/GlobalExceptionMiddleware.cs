@@ -1,30 +1,26 @@
-using System.Net;
-using System.Text.Json;
 using AspNet.MinimalApi.Movies.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace AspNet.MinimalApi.Movies.Middleware;
 
 /// <summary>
-/// Кастомний middleware для глобальної обробки помилок.
-///
-/// ПРИМІТКА: Цей клас залишено для демонстрації еволюції підходів.
-/// В поточній реалізації використовується UseExceptionHandler замість цього middleware.
-///
-/// Переваги кастомного middleware:
-/// - Повний контроль над логікою обробки
-/// - Можливість додавання специфічної логіки
-/// - Навчальна цінність для розуміння принципів роботи
-///
-/// Недоліки:
-/// - Більше коду для підтримки
-/// - Потреба в окремому тестуванні
-/// - Дублювання функціональності, яка вже є в ASP.NET Core
+///     Кастомний middleware для глобальної обробки помилок.
+///     ПРИМІТКА: Цей клас залишено для демонстрації еволюції підходів.
+///     В поточній реалізації використовується UseExceptionHandler замість цього middleware.
+///     Переваги кастомного middleware:
+///     - Повний контроль над логікою обробки
+///     - Можливість додавання специфічної логіки
+///     - Навчальна цінність для розуміння принципів роботи
+///     Недоліки:
+///     - Більше коду для підтримки
+///     - Потреба в окремому тестуванні
+///     - Дублювання функціональності, яка вже є в ASP.NET Core
 /// </summary>
 public class GlobalExceptionMiddleware
 {
-    private readonly RequestDelegate _next;
     private readonly ILogger<GlobalExceptionMiddleware> _logger;
+    private readonly RequestDelegate _next;
 
     public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
     {
@@ -58,9 +54,12 @@ public class GlobalExceptionMiddleware
                 Status = (int)HttpStatusCode.NotFound,
                 Detail = movieNotFound.Message,
                 Instance = context.Request.Path,
-                Extensions = { ["imdbId"] = movieNotFound.ImdbId }
+                Extensions =
+                {
+                    ["imdbId"] = movieNotFound.ImdbId
+                }
             },
-            
+
             MovieNotFoundByIdException movieNotFoundById => new ProblemDetails
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
@@ -68,9 +67,12 @@ public class GlobalExceptionMiddleware
                 Status = (int)HttpStatusCode.NotFound,
                 Detail = movieNotFoundById.Message,
                 Instance = context.Request.Path,
-                Extensions = { ["id"] = movieNotFoundById.Id }
+                Extensions =
+                {
+                    ["id"] = movieNotFoundById.Id
+                }
             },
-            
+
             MovieAlreadyExistsException movieExists => new ProblemDetails
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.9",
@@ -78,9 +80,12 @@ public class GlobalExceptionMiddleware
                 Status = (int)HttpStatusCode.Conflict,
                 Detail = movieExists.Message,
                 Instance = context.Request.Path,
-                Extensions = { ["imdbId"] = movieExists.ImdbId }
+                Extensions =
+                {
+                    ["imdbId"] = movieExists.ImdbId
+                }
             },
-            
+
             ValidationException validation => new ProblemDetails
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
@@ -88,9 +93,12 @@ public class GlobalExceptionMiddleware
                 Status = (int)HttpStatusCode.BadRequest,
                 Detail = validation.Message,
                 Instance = context.Request.Path,
-                Extensions = { ["errors"] = validation.Errors }
+                Extensions =
+                {
+                    ["errors"] = validation.Errors
+                }
             },
-            
+
             ArgumentException argument => new ProblemDetails
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
@@ -99,7 +107,7 @@ public class GlobalExceptionMiddleware
                 Detail = argument.Message,
                 Instance = context.Request.Path
             },
-            
+
             _ => new ProblemDetails
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
@@ -110,7 +118,7 @@ public class GlobalExceptionMiddleware
             }
         };
 
-        context.Response.StatusCode = problemDetails.Status ?? (int)HttpStatusCode.InternalServerError;
+        /*context.Response.StatusCode = problemDetails.Status ?? (int)HttpStatusCode.InternalServerError;
 
         var options = new JsonSerializerOptions
         {
@@ -119,6 +127,8 @@ public class GlobalExceptionMiddleware
         };
 
         var json = JsonSerializer.Serialize(problemDetails, options);
-        await context.Response.WriteAsync(json);
+        await context.Response.WriteAsync(json);*/
+
+        await Results.Problem(problemDetails).ExecuteAsync(context);
     }
 }

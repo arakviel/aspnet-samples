@@ -106,8 +106,6 @@ public class ApplicationDbContext : DbContext
                 CreatedAt = now,
                 UpdatedAt = now
             },
-
-            // Фільми з add_movies.json
             new Movie
             {
                 Id = 4,
@@ -204,8 +202,6 @@ public class ApplicationDbContext : DbContext
                 CreatedAt = now,
                 UpdatedAt = now
             },
-
-            // Додаткові фільми для демонстрації пагінації
             new Movie
             {
                 Id = 8,

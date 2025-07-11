@@ -1,0 +1,63 @@
+### Тестування кастомної системи аутентифікації
+### Цей файл містить HTTP запити для тестування всіх endpoint'ів
+
+### 1. Отримання форми логіну
+GET http://localhost:5208/login
+Accept: text/html
+
+###
+
+### 2. Спроба доступу до захищеного ресурсу без аутентифікації
+GET http://localhost:5208/
+Accept: text/html
+
+###
+
+### 3. Вхід в систему з правильними обліковими даними (Tom)
+POST http://localhost:5208/login
+Content-Type: application/x-www-form-urlencoded
+
+email=tom@itstep.org&password=12345
+
+###
+
+### 4. Вхід в систему з правильними обліковими даними (Bob)
+POST http://localhost:5208/login
+Content-Type: application/x-www-form-urlencoded
+
+email=bob@itstep.org&password=55555
+
+###
+
+### 5. Спроба входу з неправильними обліковими даними
+POST http://localhost:5208/login
+Content-Type: application/x-www-form-urlencoded
+
+email=wrong@example.com&password=wrongpassword
+
+###
+
+### 6. Доступ до захищеного ресурсу після аутентифікації
+### (Потрібно спочатку виконати успішний логін)
+GET http://localhost:5208/
+Accept: text/html
+
+###
+
+### 7. Вихід з системи
+GET http://localhost:5208/logout
+Accept: text/html
+
+###
+
+### 8. Сторінка відмови в доступі
+GET http://localhost:5208/access-denied
+Accept: text/html
+
+###
+
+### 9. Спроба доступу до неіснуючого endpoint'у
+GET http://localhost:5208/nonexistent
+Accept: text/html
+
+###

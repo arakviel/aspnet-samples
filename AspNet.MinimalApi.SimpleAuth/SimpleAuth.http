@@ -1,0 +1,57 @@
+### Перевірка головної сторінки
+GET http://localhost:5224/
+
+### Реєстрація нового користувача
+POST http://localhost:5224/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "newpass123",
+  "email": "newuser@example.com"
+}
+
+### Логін з існуючим користувачем
+POST http://localhost:5224/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Логін з новим користувачем
+POST http://localhost:5224/login
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "newpass123"
+}
+
+### Перевірка статусу аутентифікації
+GET http://localhost:5224/auth/status
+
+### Доступ до захищеного ресурсу
+GET http://localhost:5224/protected
+
+### Перегляд користувачів (захищений ендпоінт)
+GET http://localhost:5224/users
+
+### Логаут
+POST http://localhost:5224/logout
+
+### Спроба доступу до захищеного ресурсу після логауту
+GET http://localhost:5224/protected
+
+### Спроба перегляду користувачів після логауту
+GET http://localhost:5224/users
+
+### Спроба логіну з неправильним паролем
+POST http://localhost:5224/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrongpassword"
+}
