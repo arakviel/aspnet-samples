@@ -1,0 +1,166 @@
+### ASP.NET Core JWT Authentication Testing
+
+@baseUrl = http://localhost:5000
+@token = 
+
+### 1. Головна сторінка
+GET {{baseUrl}}/
+
+### 2. Публічний ендпоінт
+GET {{baseUrl}}/public
+
+### 3. Статус аутентифікації (без токена)
+GET {{baseUrl}}/auth/status
+
+### 4. Логін адміністратора
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 5. Логін менеджера
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "manager",
+  "password": "manager123"
+}
+
+### 6. Логін звичайного користувача
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user123"
+}
+
+### 7. Реєстрація нового користувача
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "password123",
+  "email": "newuser@example.com"
+}
+
+### 8. Статус аутентифікації (з токеном)
+GET {{baseUrl}}/auth/status
+Authorization: Bearer {{token}}
+
+### 9. Профіль користувача
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{token}}
+
+### 10. Інформація про токен
+GET {{baseUrl}}/auth/token-info
+Authorization: Bearer {{token}}
+
+### 11. Захищений ресурс
+GET {{baseUrl}}/protected
+Authorization: Bearer {{token}}
+
+### 12. Адміністративна панель (тільки Admin)
+GET {{baseUrl}}/admin
+Authorization: Bearer {{token}}
+
+### 13. Панель менеджера (Manager або Admin)
+GET {{baseUrl}}/manager
+Authorization: Bearer {{token}}
+
+### 14. Ресурс тільки для User
+GET {{baseUrl}}/user-only
+Authorization: Bearer {{token}}
+
+### 15. Спроба доступу без токена
+GET {{baseUrl}}/protected
+
+### 16. Спроба доступу з недійсним токеном
+GET {{baseUrl}}/protected
+Authorization: Bearer invalid.jwt.token
+
+### === ТЕСТОВІ СЦЕНАРІЇ ===
+
+### Сценарій 1: Адміністратор
+# 1. Логін як admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 2. Доступ до всіх ресурсів
+GET {{baseUrl}}/admin
+Authorization: Bearer {{token}}
+
+### 3. Панель менеджера
+GET {{baseUrl}}/manager
+Authorization: Bearer {{token}}
+
+### Сценарій 2: Менеджер
+# 1. Логін як manager
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "manager",
+  "password": "manager123"
+}
+
+### 2. Доступ до панелі менеджера (має працювати)
+GET {{baseUrl}}/manager
+Authorization: Bearer {{token}}
+
+### 3. Спроба доступу до адмін панелі (має бути 403)
+GET {{baseUrl}}/admin
+Authorization: Bearer {{token}}
+
+### Сценарій 3: Звичайний користувач
+# 1. Логін як user
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user123"
+}
+
+### 2. Доступ до ресурсу для User (має працювати)
+GET {{baseUrl}}/user-only
+Authorization: Bearer {{token}}
+
+### 3. Спроба доступу до панелі менеджера (має бути 403)
+GET {{baseUrl}}/manager
+Authorization: Bearer {{token}}
+
+### 4. Спроба доступу до адмін панелі (має бути 403)
+GET {{baseUrl}}/admin
+Authorization: Bearer {{token}}
+
+### === ІНСТРУКЦІЇ ===
+# 1. Запустіть додаток: dotnet run
+# 2. Виконайте логін (запити 4, 5 або 6)
+# 3. Скопіюйте token з відповіді
+# 4. Вставте його у змінну @token вгорі
+# 5. Тестуйте різні ендпоінти з різними ролями
+
+### === ОСОБЛИВОСТІ ASP.NET CORE JWT ===
+# ✅ Автоматична валідація токенів
+# ✅ Claims-based авторизація
+# ✅ Authorization Policies
+# ✅ Role-based авторизація
+# ✅ Вбудоване логування
+# ✅ TokenValidationParameters
+# ✅ JwtBearerEvents для debugging
+
+### === ТЕСТОВІ КОРИСТУВАЧІ ===
+# admin / admin123 - роль Admin
+# manager / manager123 - роль Manager
+# user / user123 - роль User

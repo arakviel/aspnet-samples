@@ -1,0 +1,69 @@
+### Simple JWT Auth Testing
+
+@baseUrl = http://localhost:5000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBZG1pbiIsImlzcyI6IlNpbXBsZUp3dEF1dGgiLCJleHAiOjE3NTM2MzM0NDN9.bopOF4eRMzUpV0hErqINXGLI8W5GxbJ85vgaBp5fiFE
+
+### 1. Головна сторінка
+GET {{baseUrl}}/
+
+### 2. Логін адміністратора
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 3. Логін користувача
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user123"
+}
+
+### 4. Реєстрація нового користувача
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "password123"
+}
+
+### 5. Профіль (з токеном)
+GET {{baseUrl}}/profile
+Authorization: Bearer {{token}}
+
+### 6. Захищений ресурс (з токеном)
+GET {{baseUrl}}/protected
+Authorization: Bearer {{token}}
+
+### 7. Адміністративна панель (з токеном адміністратора)
+GET {{baseUrl}}/admin
+Authorization: Bearer {{token}}
+
+### 8. Спроба доступу без токена
+GET {{baseUrl}}/protected
+
+### 9. Спроба доступу з недійсним токеном
+GET {{baseUrl}}/protected
+Authorization: Bearer invalid.jwt.token
+
+### 10. Спроба доступу до адмін панелі звичайним користувачем
+# Спочатку увійдіть як user, потім використайте цей запит
+GET {{baseUrl}}/admin
+Authorization: Bearer {{token}}
+
+### === ІНСТРУКЦІЇ ===
+# 1. Запустіть додаток: dotnet run
+# 2. Виконайте логін (запит 2 або 3)
+# 3. Скопіюйте token з відповіді
+# 4. Вставте його у змінну @token вгорі
+# 5. Тестуйте інші ендпоінти
+
+### === ТЕСТОВІ КОРИСТУВАЧІ ===
+# admin / admin123 - роль Admin
+# user / user123 - роль User

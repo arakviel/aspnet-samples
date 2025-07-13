@@ -1,0 +1,80 @@
+### Simple JWT Auth with Cookies Testing
+
+@baseUrl = http://localhost:5000
+
+### 1. Головна сторінка
+GET {{baseUrl}}/
+
+### 2. Статус аутентифікації (без cookie)
+GET {{baseUrl}}/auth/status
+
+### 3. Логін адміністратора (cookie встановлюється автоматично)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 4. Статус аутентифікації (з cookie)
+GET {{baseUrl}}/auth/status
+
+### 5. Профіль (з cookie)
+GET {{baseUrl}}/profile
+
+### 6. Захищений ресурс (з cookie)
+GET {{baseUrl}}/protected
+
+### 7. Адміністративна панель (з cookie адміністратора)
+GET {{baseUrl}}/admin
+
+### 8. Логаут (видаляє cookie)
+POST {{baseUrl}}/logout
+
+### 9. Спроба доступу після логауту (має бути 401)
+GET {{baseUrl}}/protected
+
+### 10. Логін звичайного користувача
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "user", 
+  "password": "user123"
+}
+
+### 11. Спроба доступу до адмін панелі звичайним користувачем
+GET {{baseUrl}}/admin
+
+### 12. Реєстрація нового користувача (cookie встановлюється автоматично)
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "password123"
+}
+
+### 13. Профіль нового користувача
+GET {{baseUrl}}/profile
+
+### 14. Логаут нового користувача
+POST {{baseUrl}}/logout
+
+### === ІНСТРУКЦІЇ ===
+# 1. Запустіть додаток: dotnet run
+# 2. Виконуйте запити по порядку
+# 3. Cookie встановлюються та видаляються автоматично
+# 4. Не потрібно копіювати токени - все в cookies!
+
+### === ОСОБЛИВОСТІ COOKIES ===
+# ✅ HttpOnly - JavaScript не може прочитати
+# ✅ Secure - тільки через HTTPS (в продакшені)
+# ✅ SameSite=Lax - захист від CSRF
+# ✅ Автоматично надсилаються з кожним запитом
+# ✅ Термін дії: 14 днів
+
+### === ТЕСТОВІ КОРИСТУВАЧІ ===
+# admin / admin123 - роль Admin
+# user / user123 - роль User

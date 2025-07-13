@@ -1,0 +1,208 @@
+### ASP.NET Minimal API - Custom JWT Authentication
+### Тестування кастомної JWT аутентифікації
+
+@baseUrl = https://localhost:7000
+@accessToken = 
+@refreshToken = 
+
+### 1. Головна сторінка (публічна)
+GET {{baseUrl}}/
+Accept: application/json
+
+### 2. Публічний ендпоінт
+GET {{baseUrl}}/public
+Accept: application/json
+
+### 3. Реєстрація нового користувача
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "password123",
+  "email": "newuser@example.com"
+}
+
+### 4. Вхід в систему (існуючий користувач)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 5. Вхід в систему (звичайний користувач)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "user123"
+}
+
+### 6. Вхід в систему (тестовий користувач)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "test123"
+}
+
+### 7. Перевірка статусу аутентифікації (без токена)
+GET {{baseUrl}}/auth/status
+Accept: application/json
+
+### 8. Перевірка статусу аутентифікації (з токеном)
+GET {{baseUrl}}/auth/status
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 9. Отримання профілю користувача (захищений)
+GET {{baseUrl}}/auth/profile
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 10. Захищений ендпоінт
+GET {{baseUrl}}/protected
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 11. Тестування ролей
+GET {{baseUrl}}/roles/test
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 12. Список користувачів (тільки для адміністраторів)
+GET {{baseUrl}}/users
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 13. Адміністративна панель (тільки для адміністраторів)
+GET {{baseUrl}}/admin/dashboard
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 14. Оновлення токена
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 15. Спроба доступу до захищеного ресурсу без токена
+GET {{baseUrl}}/protected
+Accept: application/json
+
+### 16. Спроба доступу до адміністративного ресурсу звичайним користувачем
+# Спочатку увійдіть як звичайний користувач, потім використайте цей запит
+GET {{baseUrl}}/admin/dashboard
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 17. Спроба доступу з недійсним токеном
+GET {{baseUrl}}/protected
+Accept: application/json
+Authorization: Bearer invalid.jwt.token
+
+### 18. Спроба доступу з прострочeним токеном
+# Використайте старий токен, який вже прострочив
+GET {{baseUrl}}/protected
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.expired.token
+
+### === ТЕСТОВІ СЦЕНАРІЇ ===
+
+### Сценарій 1: Повний цикл аутентифікації
+# 1. Реєстрація
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser2",
+  "password": "password123",
+  "email": "testuser2@example.com"
+}
+
+### 2. Вхід
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser2",
+  "password": "password123"
+}
+
+### 3. Доступ до захищеного ресурсу
+GET {{baseUrl}}/protected
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### 4. Оновлення токена
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Сценарій 2: Тестування помилок
+# 1. Реєстрація з існуючим username
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123",
+  "email": "newemail@example.com"
+}
+
+### 2. Реєстрація з існуючим email
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "newusername",
+  "password": "password123",
+  "email": "admin@example.com"
+}
+
+### 3. Вхід з неправильним паролем
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrongpassword"
+}
+
+### 4. Вхід з неіснуючим користувачем
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "nonexistent",
+  "password": "password123"
+}
+
+### 5. Оновлення з недійсним refresh token
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "invalid.refresh.token"
+}
+
+### === ІНСТРУКЦІЇ ===
+# 1. Запустіть додаток: dotnet run
+# 2. Скопіюйте accessToken та refreshToken з відповідей на запити входу
+# 3. Вставте їх у змінні @accessToken та @refreshToken вгорі файлу
+# 4. Тестуйте різні ендпоінти з різними ролями користувачів
+# 5. Перевіряйте логи додатку для детальної інформації
+
+### === ТЕСТОВІ КОРИСТУВАЧІ ===
+# admin / admin123 - роль Admin
+# user / user123 - роль User  
+# testuser / test123 - роль User

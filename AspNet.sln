@@ -17,6 +17,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.CustomAut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.SimpleAuth", "AspNet.MinimalApi.SimpleAuth\AspNet.MinimalApi.SimpleAuth.csproj", "{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.CustomJwtAuth", "AspNet.MinimalApi.CustomJwtAuth\AspNet.MinimalApi.CustomJwtAuth.csproj", "{5F2E24F1-CAC3-4C82-B040-A3D5FA9B7360}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.SimpleJwtAuth", "AspNet.MinimalApi.SimpleJwtAuth\AspNet.MinimalApi.SimpleJwtAuth.csproj", "{6564E29C-DA7B-4322-BDC8-013A4F434308}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.SimpleJwtWithCookiesAuth", "AspNet.MinimalApi.SimpleJwtWithCookiesAuth\AspNet.MinimalApi.SimpleJwtWithCookiesAuth.csproj", "{BDD3EB2D-064C-48BE-A484-5247CD56D261}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.JwtAuth", "AspNet.MinimalApi.JwtAuth\AspNet.MinimalApi.JwtAuth.csproj", "{E479A170-CDC3-4ADB-B162-54C5377A6F6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,5 +63,21 @@ Global
 		{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EDA1BA5-D79A-4B4C-9ABD-8F274FE60868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F2E24F1-CAC3-4C82-B040-A3D5FA9B7360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F2E24F1-CAC3-4C82-B040-A3D5FA9B7360}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F2E24F1-CAC3-4C82-B040-A3D5FA9B7360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F2E24F1-CAC3-4C82-B040-A3D5FA9B7360}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6564E29C-DA7B-4322-BDC8-013A4F434308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6564E29C-DA7B-4322-BDC8-013A4F434308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6564E29C-DA7B-4322-BDC8-013A4F434308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6564E29C-DA7B-4322-BDC8-013A4F434308}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDD3EB2D-064C-48BE-A484-5247CD56D261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDD3EB2D-064C-48BE-A484-5247CD56D261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDD3EB2D-064C-48BE-A484-5247CD56D261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDD3EB2D-064C-48BE-A484-5247CD56D261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E479A170-CDC3-4ADB-B162-54C5377A6F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E479A170-CDC3-4ADB-B162-54C5377A6F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E479A170-CDC3-4ADB-B162-54C5377A6F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E479A170-CDC3-4ADB-B162-54C5377A6F6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
