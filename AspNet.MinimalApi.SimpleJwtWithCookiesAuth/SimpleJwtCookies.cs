@@ -6,13 +6,13 @@ using System.Text.Json;
 namespace AspNet.MinimalApi.SimpleJwtWithCookiesAuth;
 
 /// <summary>
-/// Простий JWT генератор для cookies
+///     Простий JWT генератор для cookies
 /// </summary>
 public class SimpleJwtCookies
 {
-    private readonly string _secretKey;
-    private readonly string _issuer;
     private readonly int _expirationDays;
+    private readonly string _issuer;
+    private readonly string _secretKey;
 
     public SimpleJwtCookies(string secretKey, string issuer = "SimpleJwtCookiesAuth", int expirationDays = 14)
     {
@@ -22,17 +22,17 @@ public class SimpleJwtCookies
     }
 
     /// <summary>
-    /// Генерує JWT токен для користувача
+    ///     Генерує JWT токен для користувача
     /// </summary>
     public string GenerateToken(int userId, string username, string role = "User")
     {
         var header = new { alg = "HS256", typ = "JWT" };
-        
+
         var payload = new
         {
             sub = userId.ToString(),
-            username = username,
-            role = role,
+            username,
+            role,
             iss = _issuer,
             exp = DateTimeOffset.UtcNow.AddDays(_expirationDays).ToUnixTimeSeconds()
         };
@@ -45,7 +45,7 @@ public class SimpleJwtCookies
     }
 
     /// <summary>
-    /// Валідує JWT токен і повертає claims
+    ///     Валідує JWT токен і повертає claims
     /// </summary>
     public ClaimsPrincipal? ValidateToken(string token)
     {
@@ -75,13 +75,13 @@ public class SimpleJwtCookies
 
             // Створюємо claims
             var claims = new List<Claim>();
-            
+
             if (payloadData.TryGetProperty("sub", out var sub))
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, sub.GetString()!));
-            
+
             if (payloadData.TryGetProperty("username", out var username))
                 claims.Add(new Claim(ClaimTypes.Name, username.GetString()!));
-            
+
             if (payloadData.TryGetProperty("role", out var role))
                 claims.Add(new Claim(ClaimTypes.Role, role.GetString()!));
 
@@ -95,24 +95,27 @@ public class SimpleJwtCookies
     }
 
     /// <summary>
-    /// Створює HMAC SHA256 підпис
+    ///     Створює HMAC SHA256 підпис
     /// </summary>
     private string CreateSignature(string encodedHeader, string encodedPayload)
     {
         var data = $"{encodedHeader}.{encodedPayload}";
         var key = Encoding.UTF8.GetBytes(_secretKey);
-        
+
         using var hmac = new HMACSHA256(key);
         var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
-        
+
         return EncodeBase64Url(hash);
     }
 
     /// <summary>
-    /// Кодує в Base64URL
+    ///     Кодує в Base64URL
     /// </summary>
-    private static string EncodeBase64Url(string data) => EncodeBase64Url(Encoding.UTF8.GetBytes(data));
-    
+    private static string EncodeBase64Url(string data)
+    {
+        return EncodeBase64Url(Encoding.UTF8.GetBytes(data));
+    }
+
     private static string EncodeBase64Url(byte[] data)
     {
         var base64 = Convert.ToBase64String(data);
@@ -120,31 +123,31 @@ public class SimpleJwtCookies
     }
 
     /// <summary>
-    /// Декодує з Base64URL
+    ///     Декодує з Base64URL
     /// </summary>
     private static string DecodeBase64Url(string data)
     {
         var base64 = data.Replace('-', '+').Replace('_', '/');
-        
+
         switch (base64.Length % 4)
         {
             case 2: base64 += "=="; break;
             case 3: base64 += "="; break;
         }
-        
+
         var bytes = Convert.FromBase64String(base64);
         return Encoding.UTF8.GetString(bytes);
     }
 }
 
 /// <summary>
-/// Простий middleware для JWT cookies аутентифікації
+///     Простий middleware для JWT cookies аутентифікації
 /// </summary>
 public class SimpleJwtCookiesMiddleware
 {
-    private readonly RequestDelegate _next;
-    private readonly SimpleJwtCookies _jwt;
     private const string CookieName = "auth_token";
+    private readonly SimpleJwtCookies _jwt;
+    private readonly RequestDelegate _next;
 
     public SimpleJwtCookiesMiddleware(RequestDelegate next, SimpleJwtCookies jwt)
     {
@@ -160,10 +163,7 @@ public class SimpleJwtCookiesMiddleware
         if (!string.IsNullOrEmpty(token))
         {
             var principal = _jwt.ValidateToken(token);
-            if (principal != null)
-            {
-                context.User = principal;
-            }
+            if (principal != null) context.User = principal;
         }
 
         await _next(context);
@@ -171,20 +171,21 @@ public class SimpleJwtCookiesMiddleware
 }
 
 /// <summary>
-/// Розширення для роботи з JWT cookies
+///     Розширення для роботи з JWT cookies
 /// </summary>
 public static class JwtCookiesExtensions
 {
     /// <summary>
-    /// Встановлює JWT токен в HttpOnly cookie
+    ///     Встановлює JWT токен в HttpOnly cookie
     /// </summary>
     public static void SetJwtCookie(this HttpContext context, string token, int expirationDays = 14)
     {
         var cookieOptions = new CookieOptions
         {
-            HttpOnly = true,                    // ✅ JavaScript не може прочитати
-            Secure = true,                      // ✅ Тільки через HTTPS
-            SameSite = SameSiteMode.Lax,       // ✅ Захист від CSRF
+            HttpOnly = true, // ✅ JavaScript не може прочитати
+            //Secure = true,                      // ✅ Тільки через HTTPS
+            Secure = false,
+            SameSite = SameSiteMode.Lax, // ✅ Захист від CSRF
             Expires = DateTimeOffset.UtcNow.AddDays(expirationDays),
             Path = "/"
         };
@@ -193,7 +194,7 @@ public static class JwtCookiesExtensions
     }
 
     /// <summary>
-    /// Видаляє JWT cookie
+    ///     Видаляє JWT cookie
     /// </summary>
     public static void DeleteJwtCookie(this HttpContext context)
     {
@@ -201,7 +202,7 @@ public static class JwtCookiesExtensions
     }
 
     /// <summary>
-    /// Перевіряє, чи аутентифікований користувач
+    ///     Перевіряє, чи аутентифікований користувач
     /// </summary>
     public static bool IsAuthenticated(this HttpContext context)
     {
@@ -209,7 +210,7 @@ public static class JwtCookiesExtensions
     }
 
     /// <summary>
-    /// Отримує роль користувача
+    ///     Отримує роль користувача
     /// </summary>
     public static string? GetUserRole(this HttpContext context)
     {
@@ -217,7 +218,7 @@ public static class JwtCookiesExtensions
     }
 
     /// <summary>
-    /// Перевіряє, чи є користувач адміністратором
+    ///     Перевіряє, чи є користувач адміністратором
     /// </summary>
     public static bool IsAdmin(this HttpContext context)
     {
@@ -226,26 +227,26 @@ public static class JwtCookiesExtensions
 }
 
 /// <summary>
-/// Простий користувач
+///     Простий користувач
 /// </summary>
 public record User(int Id, string Username, string PasswordHash, string Role = "User");
 
 /// <summary>
-/// DTO для логіну
+///     DTO для логіну
 /// </summary>
 public record LoginRequest(string Username, string Password);
 
 /// <summary>
-/// DTO для реєстрації
+///     DTO для реєстрації
 /// </summary>
 public record RegisterRequest(string Username, string Password);
 
 /// <summary>
-/// DTO для відповіді (БЕЗ токена - він в cookie!)
+///     DTO для відповіді (БЕЗ токена - він в cookie!)
 /// </summary>
 public record AuthResponse(bool Success, string Message, UserInfo? User = null);
 
 /// <summary>
-/// Інформація про користувача
+///     Інформація про користувача
 /// </summary>
 public record UserInfo(int Id, string Username, string Role);

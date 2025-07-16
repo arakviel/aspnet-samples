@@ -1,5 +1,5 @@
-using AspNet.MinimalApi.SimpleJwtAuth;
 using System.Security.Claims;
+using AspNet.MinimalApi.SimpleJwtAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,10 +8,30 @@ var jwtSecret = "MySimpleSecretKeyForJwtTokenGeneration123456789";
 var jwt = new SimpleJwt(jwtSecret); // 14 днів
 builder.Services.AddSingleton(jwt);
 
+// Додаємо CORS для фронтенду
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // JWT middleware
 app.UseMiddleware<SimpleJwtMiddleware>();
+app.UseCors();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add(
+        "Content-Security-Policy",
+        "default-src 'self'; connect-src 'self' http://localhost:5000");
+    await next();
+});
 
 // Простий in-memory список користувачів
 var users = new List<User>
@@ -42,9 +62,7 @@ app.MapPost("/login", (LoginRequest request) =>
     var user = users.FirstOrDefault(u => u.Username == request.Username);
 
     if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-    {
         return Results.BadRequest(new AuthResponse(false, "Невірний логін або пароль"));
-    }
 
     var token = jwt.GenerateToken(user.Id, user.Username, user.Role);
     var userInfo = new UserInfo(user.Id, user.Username, user.Role);
@@ -56,9 +74,7 @@ app.MapPost("/login", (LoginRequest request) =>
 app.MapPost("/register", (RegisterRequest request) =>
 {
     if (users.Any(u => u.Username == request.Username))
-    {
         return Results.BadRequest(new AuthResponse(false, "Користувач вже існує"));
-    }
 
     var newUser = new User(
         users.Count + 1,
@@ -78,9 +94,7 @@ app.MapPost("/register", (RegisterRequest request) =>
 app.MapGet("/profile", (HttpContext context) =>
 {
     if (context.User.Identity?.IsAuthenticated != true)
-    {
         return Results.Problem("Необхідна аутентифікація", statusCode: 401);
-    }
 
     var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var username = context.User.FindFirst(ClaimTypes.Name)?.Value;
@@ -99,9 +113,7 @@ app.MapGet("/profile", (HttpContext context) =>
 app.MapGet("/protected", (HttpContext context) =>
 {
     if (context.User.Identity?.IsAuthenticated != true)
-    {
         return Results.Problem("Необхідна аутентифікація", statusCode: 401);
-    }
 
     var username = context.User.FindFirst(ClaimTypes.Name)?.Value;
 
@@ -116,16 +128,11 @@ app.MapGet("/protected", (HttpContext context) =>
 app.MapGet("/admin", (HttpContext context) =>
 {
     if (context.User.Identity?.IsAuthenticated != true)
-    {
         return Results.Problem("Необхідна аутентифікація", statusCode: 401);
-    }
 
     var role = context.User.FindFirst(ClaimTypes.Role)?.Value;
 
-    if (role != "Admin")
-    {
-        return Results.Problem("Доступ заборонено", statusCode: 403);
-    }
+    if (role != "Admin") return Results.Problem("Доступ заборонено", statusCode: 403);
 
     return Results.Ok(new
     {

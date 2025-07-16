@@ -1,0 +1,86 @@
+### ASP.NET Core Identity Authentication API - Тестування
+
+# Змінні для тестування
+@baseUrl = http://localhost:7000
+@accessToken = 
+
+### 1. Отримання інформації про API
+GET {{baseUrl}}/
+Accept: application/json
+
+### 2. Реєстрація нового користувача
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "Student123!"
+}
+
+### 3. Логін користувача
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "Student123!"
+}
+
+### 4. Отримання профілю користувача (потрібен токен)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### 5. Оновлення профілю користувача
+PUT {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Іван",
+  "lastName": "Петренко",
+  "phoneNumber": "+380123456789"
+}
+
+### 6. Отримання списку всіх користувачів
+GET {{baseUrl}}/auth/users
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### 7. Оновлення токена (refresh)
+POST {{baseUrl}}/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "your_refresh_token_here"
+}
+
+### 8. Реєстрація користувача з додатковими даними
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "email": "teacher@example.com",
+  "password": "Teacher123!",
+  "firstName": "Марія",
+  "lastName": "Іваненко"
+}
+
+### 9. Тестування з неправильними даними
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "wrong@example.com",
+  "password": "wrongpassword"
+}
+
+### 10. Доступ до захищеного ендпоінту без токена
+GET {{baseUrl}}/auth/profile
+Accept: application/json
+
+### Примітки:
+# 1. Замініть {{accessToken}} на реальний токен, отриманий після логіну
+# 2. Порт може відрізнятися - перевірте в launchSettings.json
+# 3. Для тестування в браузері відкрийте /swagger
+# 4. Токени мають обмежений термін дії (1 година за замовчуванням)

@@ -1,0 +1,152 @@
+### ASP.NET Core Identity with Email Confirmation - API Testing
+### Базовий URL
+@baseUrl = https://localhost:7084
+@contentType = application/json
+
+### 1. Отримання інформації про API
+GET {{baseUrl}}/
+Accept: application/json
+
+### 2. Реєстрація нового користувача (email підтвердження буде відправлено)
+POST {{baseUrl}}/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "Test123!"
+}
+
+### 3. Спроба входу БЕЗ підтвердження email (має повернути помилку)
+POST {{baseUrl}}/login?useCookies=false
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "Test123!"
+}
+
+### 4. Повторна відправка email підтвердження
+POST {{baseUrl}}/auth/resend-email-confirmation
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com"
+}
+
+### 5. Підтвердження email (замініть userId та code на реальні значення з email)
+GET {{baseUrl}}/confirmEmail?userId=USER_ID_FROM_EMAIL&code=TOKEN_FROM_EMAIL
+
+### 6. Вхід ПІСЛЯ підтвердження email
+POST {{baseUrl}}/login?useCookies=false
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "Test123!"
+}
+
+### 7. Збереження токена (замініть на реальний токен з відповіді вище)
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+
+### 8. Отримання профілю користувача (потрібна авторизація)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### 9. Перевірка статусу email підтвердження
+GET {{baseUrl}}/auth/email-status
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### 10. Оновлення профілю користувача
+PUT {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Іван",
+  "lastName": "Петренко",
+  "phoneNumber": "+380123456789"
+}
+
+### 11. Отримання списку всіх користувачів
+GET {{baseUrl}}/auth/users
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### 12. Оновлення токена
+POST {{baseUrl}}/refresh
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "YOUR_REFRESH_TOKEN_HERE"
+}
+
+### 13. Отримання інформації про користувача через стандартний ендпоінт
+GET {{baseUrl}}/manage/info
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### 14. Скидання пароля (крок 1 - запит на скидання)
+POST {{baseUrl}}/forgotPassword
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com"
+}
+
+### 15. Скидання пароля (крок 2 - встановлення нового пароля)
+POST {{baseUrl}}/resetPassword
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "resetCode": "RESET_CODE_FROM_EMAIL",
+  "newPassword": "NewPassword123!"
+}
+
+### 16. Повторна відправка email підтвердження через стандартний ендпоінт
+POST {{baseUrl}}/resendConfirmationEmail
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com"
+}
+
+### === ТЕСТУВАННЯ ПОМИЛОК ===
+
+### 17. Спроба реєстрації з невалідним паролем
+POST {{baseUrl}}/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test2@example.com",
+  "password": "123"
+}
+
+### 18. Спроба входу з неіснуючим користувачем
+POST {{baseUrl}}/login?useCookies=false
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com",
+  "password": "Test123!"
+}
+
+### 19. Спроба доступу до захищеного ресурсу без токена
+GET {{baseUrl}}/auth/profile
+Accept: application/json
+
+### 20. Спроба доступу з невалідним токеном
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer invalid_token
+Accept: application/json
+
+### === ДОДАТКОВІ ТЕСТИ ===
+
+### 21. Swagger документація
+GET {{baseUrl}}/swagger
+
+### 22. OpenAPI специфікація
+GET {{baseUrl}}/swagger/v1/swagger.json
+Accept: application/json

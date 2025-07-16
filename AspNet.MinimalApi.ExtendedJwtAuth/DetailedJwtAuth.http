@@ -1,0 +1,183 @@
+### ASP.NET Core Detailed JWT Authentication API Tests
+### Базовий URL
+@baseUrl = http://localhost:7000
+@contentType = application/json
+
+### Змінні для токенів (будуть заповнені після логіну)
+@accessToken = 
+@refreshToken = 
+
+###
+### 1. ІНФОРМАЦІЯ ПРО API
+###
+
+### Отримати інформацію про API
+GET {{baseUrl}}/
+Accept: {{contentType}}
+
+###
+### 2. АУТЕНТИФІКАЦІЯ
+###
+
+### Реєстрація нового користувача
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "Test123!",
+  "confirmPassword": "Test123!",
+  "firstName": "Тест",
+  "lastName": "Користувач",
+  "phoneNumber": "+380123456789"
+}
+
+### Реєстрація другого користувача
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "Admin123!",
+  "confirmPassword": "Admin123!",
+  "firstName": "Адмін",
+  "lastName": "Адміністратор"
+}
+
+### Вхід в систему
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "Test123!",
+  "rememberMe": true
+}
+
+### Вхід в систему (невірний пароль)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "WrongPassword",
+  "rememberMe": false
+}
+
+### Оновлення токена
+POST {{baseUrl}}/auth/refresh
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Вихід з системи
+POST {{baseUrl}}/auth/logout
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+### 3. ПРОФІЛЬ КОРИСТУВАЧА (потребує аутентифікації)
+###
+
+### Отримати профіль поточного користувача
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+Accept: {{contentType}}
+
+### Оновити профіль користувача
+PUT {{baseUrl}}/auth/profile
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Оновлене Ім'я",
+  "lastName": "Оновлене Прізвище",
+  "phoneNumber": "+380987654321"
+}
+
+### Зміна пароля
+PUT {{baseUrl}}/auth/change-password
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "currentPassword": "Test123!",
+  "newPassword": "NewTest123!",
+  "confirmNewPassword": "NewTest123!"
+}
+
+###
+### 4. КОРИСТУВАЧІ (потребує аутентифікації)
+###
+
+### Отримати список всіх користувачів
+GET {{baseUrl}}/users
+Authorization: Bearer {{accessToken}}
+Accept: {{contentType}}
+
+###
+### 5. ТЕСТИ ПОМИЛОК
+###
+
+### Спроба доступу без токена
+GET {{baseUrl}}/auth/profile
+Accept: {{contentType}}
+
+### Спроба доступу з невірним токеном
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer invalid_token_here
+Accept: {{contentType}}
+
+### Реєстрація з невірними даними
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid-email",
+  "password": "123",
+  "confirmPassword": "456"
+}
+
+### Реєстрація з існуючим email
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "Test123!",
+  "confirmPassword": "Test123!"
+}
+
+###
+### 6. SWAGGER ДОКУМЕНТАЦІЯ
+###
+
+### Отримати Swagger JSON
+GET {{baseUrl}}/swagger/v1/swagger.json
+Accept: {{contentType}}
+
+### Відкрити Swagger UI (в браузері)
+### {{baseUrl}}/swagger
+
+###
+### ІНСТРУКЦІЇ ДЛЯ ВИКОРИСТАННЯ:
+###
+### 1. Запустіть додаток: dotnet run
+### 2. Змініть @baseUrl на актуальний (зазвичай https://localhost:7001)
+### 3. Виконайте реєстрацію користувача
+### 4. Виконайте вхід в систему
+### 5. Скопіюйте accessToken та refreshToken з відповіді
+### 6. Вставте токени в змінні @accessToken та @refreshToken вгорі файлу
+### 7. Тепер можете тестувати захищені ендпоінти
+###
+### ПРИМІТКИ:
+### - Всі захищені ендпоінти потребують заголовка Authorization: Bearer <token>
+### - Access токен діє 60 хвилин (в розробці 120 хвилин)
+### - Refresh токен діє 7 днів (в розробці 30 днів)
+### - Використовуйте /auth/refresh для оновлення токена
+###
