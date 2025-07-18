@@ -107,15 +107,15 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddDefaultTokenProviders(); // Додаємо провайдери токенів для email підтвердження
 
 // Додаємо email сервіс як Transient для сумісності з MapIdentityApi
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 // Додаємо сервіс для обробки подій Identity
-builder.Services.AddScoped<IdentityEventService>();
+//builder.Services.AddScoped<IdentityEventService>();
 
 // Додаємо EmailSender для автоматичної відправки email через MapIdentityApi
 // Реєструємо обидва інтерфейси як Transient, щоб уникнути проблем з DI
-builder.Services.AddScoped<IEmailSender, IdentityEmailSender>();
-builder.Services.AddScoped<IEmailSender<User>, IdentityEmailSender>();
+builder.Services.AddTransient<IEmailSender, IdentityEmailSender>();
+builder.Services.AddTransient<IEmailSender<User>, IdentityEmailSender>();
 
 // Створюємо додаток
 var app = builder.Build();

@@ -3,6 +3,7 @@ using AspNet.MinimalApi.IdentityAuth.Data;
 using AspNet.MinimalApi.IdentityAuth.Extensions;
 using AspNet.MinimalApi.IdentityAuth.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -38,22 +39,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAuthorization();
 
 // Налаштування аутентифікації
-//builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
 // === COOKIE АУТЕНТИФІКАЦІЯ (ЗАКОМЕНТОВАНО) ===
 // Розкоментуйте наступний блок для активації cookie аутентифікації для веб-додатків:
-// .AddCookie(IdentityConstants.ApplicationScheme, options =>
-// {
-//     // Налаштування cookie для веб-додатків
-//     options.LoginPath = "/login";           // Сторінка логіну
-//     options.LogoutPath = "/logout";         // Сторінка виходу
-//     options.AccessDeniedPath = "/access-denied"; // Сторінка відмови в доступі
-//     options.ExpireTimeSpan = TimeSpan.FromDays(7); // Термін дії cookie
-//     options.SlidingExpiration = true;       // Продовжувати термін дії при активності
-//     options.Cookie.HttpOnly = true;         // Захист від XSS атак
-//     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // HTTPS у продакшені
-//     options.Cookie.SameSite = SameSiteMode.Lax; // Захист від CSRF
-// })
-builder.Services.AddAuthentication(options =>
+    .AddCookie(IdentityConstants.ApplicationScheme, options =>
+    {
+        // Налаштування cookie для веб-додатків
+        options.LoginPath = "/auth/login"; // Сторінка логіну
+        options.LogoutPath = "/auth/logout"; // Сторінка виходу
+        options.AccessDeniedPath = "/access-denied"; // Сторінка відмови в доступі
+        options.ExpireTimeSpan = TimeSpan.FromDays(7); // Термін дії cookie
+        options.SlidingExpiration = true; // Продовжувати термін дії при активності
+        options.Cookie.HttpOnly = true; // Захист від XSS атак
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // HTTPS у продакшені
+        options.Cookie.SameSite = SameSiteMode.Lax; // Захист від CSRF
+    });
+/*builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
         options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
@@ -63,7 +64,7 @@ builder.Services.AddAuthentication(options =>
         // Налаштування Bearer токенів для API
         options.BearerTokenExpiration = TimeSpan.FromHours(1); // Термін дії токена
         options.RefreshTokenExpiration = TimeSpan.FromDays(7); // Термін дії refresh токена
-    });
+    });*/
 
 // Налаштування ASP.NET Core Identity
 builder.Services.AddIdentityCore<User>(options =>
@@ -110,7 +111,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Використовуємо HTTPS редирект
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 // Використовуємо аутентифікацію та авторизацію
 app.UseAuthentication();
@@ -168,7 +169,50 @@ app.MapGet("/", () => new
 
 // Мапимо стандартні ендпоінти Identity
 // Це автоматично створює: /register, /login, /refresh, /confirmEmail тощо
-app.MapIdentityApi<User>();
+//app.MapIdentityApi<User>();
+
+// Реєстрація користувача
+app.MapPost("/auth/register", async (UserManager<User> userManager, RegisterRequest request) =>
+    {
+        var user = new User
+        {
+            UserName = request.Email,
+            Email = request.Email
+        };
+
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (result.Succeeded) return Results.Ok(new { Message = "Реєстрація успішна" });
+
+        return Results.BadRequest(new { Errors = result.Errors.Select(e => e.Description) });
+    })
+    .WithName("Register")
+    .WithSummary("Реєстрація нового користувача")
+    .WithDescription("Створює нового користувача та повертає результат");
+
+// Логін користувача
+app.MapPost("/auth/login", async (SignInManager<User> signInManager, LoginRequest request) =>
+    {
+        var user = await signInManager.UserManager.FindByEmailAsync(request.Email);
+        if (user == null) return Results.Unauthorized();
+
+        var result = await signInManager.PasswordSignInAsync(user, request.Password, true, true);
+        if (result.Succeeded) return Results.Ok(new { Message = "Логін успішний" });
+
+        return Results.Unauthorized();
+    })
+    .WithName("Login")
+    .WithSummary("Логін користувача")
+    .WithDescription("Аутентифікує користувача та створює cookie");
+
+// Вихід користувача
+app.MapPost("/auth/logout", async (SignInManager<User> signInManager) =>
+    {
+        await signInManager.SignOutAsync();
+        return Results.Ok(new { Message = "Вихід успішний" });
+    })
+    .WithName("Logout")
+    .WithSummary("Вихід користувача")
+    .WithDescription("Завершує сесію користувача та видаляє cookie");
 
 // === КАСТОМНІ ЕНДПОІНТИ ===
 

@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.ExtendedJ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.IdentityWithEmailConfirmationAuth", "AspNet.MinimalApi.IdentityWithEmailConfirmationAuth\AspNet.MinimalApi.IdentityWithEmailConfirmationAuth.csproj", "{ADC638FD-69B8-44B1-8FC9-D31E20E7455A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.Blog", "AspNet.MinimalApi.Blog\AspNet.MinimalApi.Blog.csproj", "{9BC9E677-04E8-4BB7-A811-76A71925AFA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{ADC638FD-69B8-44B1-8FC9-D31E20E7455A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADC638FD-69B8-44B1-8FC9-D31E20E7455A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADC638FD-69B8-44B1-8FC9-D31E20E7455A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BC9E677-04E8-4BB7-A811-76A71925AFA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BC9E677-04E8-4BB7-A811-76A71925AFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BC9E677-04E8-4BB7-A811-76A71925AFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BC9E677-04E8-4BB7-A811-76A71925AFA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B75DFE72-A8D2-4D21-841C-365719758B8A} = {A4446A9F-188A-43D8-BE11-BBE1E0A4ADEA}

@@ -1,6 +1,6 @@
 ### ASP.NET Core Identity with Email Confirmation - API Testing
 ### Базовий URL
-@baseUrl = https://localhost:7084
+@baseUrl = http://localhost:7000
 @contentType = application/json
 
 ### 1. Отримання інформації про API

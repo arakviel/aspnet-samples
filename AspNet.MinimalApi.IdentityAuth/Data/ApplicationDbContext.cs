@@ -1,20 +1,22 @@
 using AspNet.MinimalApi.IdentityAuth.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNet.MinimalApi.IdentityAuth.Data;
 
 /// <summary>
-/// Контекст бази даних для ASP.NET Core Identity
-/// 
-/// IdentityDbContext<User> автоматично створює таблиці:
-/// - AspNetUsers - користувачі
-/// - AspNetRoles - ролі
-/// - AspNetUserRoles - зв'язок користувачів і ролей
-/// - AspNetUserClaims - claims користувачів
-/// - AspNetRoleClaims - claims ролей
-/// - AspNetUserLogins - зовнішні логіни (Google, Facebook тощо)
-/// - AspNetUserTokens - токени користувачів
+///     Контекст бази даних для ASP.NET Core Identity
+///     IdentityDbContext
+///     <User>
+///         автоматично створює таблиці:
+///         - AspNetUsers - користувачі
+///         - AspNetRoles - ролі
+///         - AspNetUserRoles - зв'язок користувачів і ролей
+///         - AspNetUserClaims - claims користувачів
+///         - AspNetRoleClaims - claims ролей
+///         - AspNetUserLogins - зовнішні логіни (Google, Facebook тощо)
+///         - AspNetUserTokens - токени користувачів
 /// </summary>
 public class ApplicationDbContext : IdentityDbContext<User>
 {
@@ -24,7 +26,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     }
 
     /// <summary>
-    /// Налаштування моделей бази даних
+    ///     Налаштування моделей бази даних
     /// </summary>
     /// <param name="builder">Конструктор моделей</param>
     protected override void OnModelCreating(ModelBuilder builder)
@@ -38,10 +40,10 @@ public class ApplicationDbContext : IdentityDbContext<User>
             // Налаштування довжини полів
             entity.Property(u => u.FirstName)
                 .HasMaxLength(50);
-                
+
             entity.Property(u => u.LastName)
                 .HasMaxLength(50);
-            
+
             // Налаштування значення за замовчуванням для CreatedAt
             entity.Property(u => u.CreatedAt)
                 .HasDefaultValueSql("datetime('now')"); // SQLite синтаксис
@@ -52,16 +54,15 @@ public class ApplicationDbContext : IdentityDbContext<User>
     }
 
     /// <summary>
-    /// Додавання початкових даних до бази
+    ///     Додавання початкових даних до бази
     /// </summary>
     /// <param name="builder">Конструктор моделей</param>
     private static void SeedData(ModelBuilder builder)
     {
         // Тут можна додати початкових користувачів, ролі тощо
         // Наприклад:
-        // builder.Entity<IdentityRole>().HasData(
-        //     new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
-        //     new IdentityRole { Id = "2", Name = "User", NormalizedName = "USER" }
-        // );
+        builder.Entity<IdentityRole>().HasData(
+            new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+            new IdentityRole { Id = "2", Name = "User", NormalizedName = "USER" });
     }
 }

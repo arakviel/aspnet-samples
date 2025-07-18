@@ -1,0 +1,110 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImU1ODBhNDY2LWZhMTMtNGY3MS04OTY5LWEzNTI3ZDc0MzkxMCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbkBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGV4YW1wbGUuY29tIiwiRW1haWxWZXJpZmllZCI6InRydWUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTc1Mjg0Njk0NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEifQ.CI3gV0qX8s1UZKMwpgH-_ml6YN67_7BGiY6xY2jVz14
+
+### Public Endpoint
+GET http://localhost:5189/
+
+### Register User
+POST http://localhost:5189/register
+Content-Type: application/json
+
+{
+  "userName": "testuser_new2",
+  "email": "test_new2@example.com",
+  "password": "Password123$"
+}
+
+### Custom User
+POST http://localhost:5189/login
+Content-Type: application/json
+
+{
+  "email": "test_new2",
+  "password": "Password123$"
+}
+
+### Login Admin User
+POST http://localhost:5189/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "Admin@123"
+}
+
+### Login Regular User
+POST http://localhost:5189/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "User@123"
+}
+
+### Login Unconfirmed User
+POST http://localhost:5189/login
+Content-Type: application/json
+
+{
+  "email": "unconfirmed@example.com",
+  "password": "Unconfirmed@123"
+}
+
+### Login New User (for registration days policy testing)
+POST http://localhost:5189/login
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "NewUser@123"
+}
+
+### Get Admin Endpoint (Requires Admin Role)
+GET http://localhost:5189/admin
+Authorization: Bearer {{token}}
+
+### Get Authenticated Endpoint (Requires Authenticated User)
+GET http://localhost:5189/authenticated
+Authorization: Bearer {{token}}
+
+### Get Email Confirmed Endpoint (Requires Email Confirmation)
+GET http://localhost:5189/email-confirmed
+Authorization: Bearer {{token}}
+
+### Get Email Confirmed Endpoint (Unconfirmed User - Should Fail)
+GET http://localhost:5189/email-confirmed
+Authorization: Bearer {{token}}
+
+### Get All Posts (Requires Authenticated User)
+GET http://localhost:5189/posts
+Authorization: Bearer {{token}}
+
+### Create a New Post (Requires Authenticated User)
+POST http://localhost:5189/posts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "My New Post 2",
+  "content": "This is the content of my brand new post. 2"
+}
+
+### Add Comment to Post (User registered for 5 days - Should Succeed)
+POST http://localhost:5189/posts/1/comments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "content": "This is a comment from a user registered for 5 days."
+}
+
+### Add Comment to Post (New user registered for less than 3 days - Should Fail)
+POST http://localhost:5189/posts/1/comments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "content": "This is a comment from a new user."
+}
+
+### Confirm Email (Placeholder - requires actual token from registration)
+GET http://localhost:5189/confirm-email?userId=USER_ID_HERE&token=TOKEN_HERE
