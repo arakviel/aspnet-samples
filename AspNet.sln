@@ -39,6 +39,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.IdentityW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.Blog", "AspNet.MinimalApi.Blog\AspNet.MinimalApi.Blog.csproj", "{9BC9E677-04E8-4BB7-A811-76A71925AFA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.AuthSms", "AspNet.MinimalApi.AuthSms\AspNet.MinimalApi.AuthSms.csproj", "{009474D9-35F2-4011-90D5-5DA8433E7E1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.AuthSmsIdentity", "AspNet.MinimalApi.AuthSmsIdentity\AspNet.MinimalApi.AuthSmsIdentity.csproj", "{7A568E6F-DD87-46EA-8462-4408D9CB3DBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNet.MinimalApi.Auth2Factors", "AspNet.MinimalApi.Auth2Factors\AspNet.MinimalApi.Auth2Factors.csproj", "{3297447A-3813-4877-8821-10F46E6EEA1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +115,18 @@ Global
 		{9BC9E677-04E8-4BB7-A811-76A71925AFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BC9E677-04E8-4BB7-A811-76A71925AFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BC9E677-04E8-4BB7-A811-76A71925AFA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{009474D9-35F2-4011-90D5-5DA8433E7E1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{009474D9-35F2-4011-90D5-5DA8433E7E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{009474D9-35F2-4011-90D5-5DA8433E7E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{009474D9-35F2-4011-90D5-5DA8433E7E1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A568E6F-DD87-46EA-8462-4408D9CB3DBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A568E6F-DD87-46EA-8462-4408D9CB3DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A568E6F-DD87-46EA-8462-4408D9CB3DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A568E6F-DD87-46EA-8462-4408D9CB3DBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3297447A-3813-4877-8821-10F46E6EEA1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3297447A-3813-4877-8821-10F46E6EEA1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3297447A-3813-4877-8821-10F46E6EEA1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3297447A-3813-4877-8821-10F46E6EEA1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B75DFE72-A8D2-4D21-841C-365719758B8A} = {A4446A9F-188A-43D8-BE11-BBE1E0A4ADEA}
