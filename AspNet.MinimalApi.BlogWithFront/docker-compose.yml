@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blogdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  api:
+    build: .
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      POSTGRES_CONNECTION: Host=db;Port=5432;Database=blogdb;Username=postgres;Password=postgres
+    ports:
+      - "8081:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:
+
