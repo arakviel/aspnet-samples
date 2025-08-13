@@ -42,18 +42,18 @@ public class EmailSender : IEmailSender
 
 /// <summary>
 /// Розширення для генерації QR кодів для TOTP
-/// Використовує Google Charts API для простоти
+/// Використовує quickchart API для простоти
 /// </summary>
 public static class QrCodeHelper
 {
     /// <summary>
-    /// Генерує URL для QR коду через Google Charts API
+    /// Генерує URL для QR коду через quickchart API
     /// </summary>
     public static string GenerateQrCodeUri(string authenticatorUri)
     {
-        // Використовуємо Google Charts API для генерації QR коду
+        // Використовуємо quickchart API для генерації QR коду
         // В production краще використовувати локальну бібліотеку QR кодів
         var encodedUri = Uri.EscapeDataString(authenticatorUri);
-        return $"https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={encodedUri}";
+        return $"https://quickchart.io/qr?chs=200x200&chld=M|0&text={encodedUri}";
     }
 }

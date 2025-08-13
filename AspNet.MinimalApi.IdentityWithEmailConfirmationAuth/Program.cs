@@ -3,6 +3,7 @@ using AspNet.MinimalApi.IdentityWithEmailConfirmationAuth.Data;
 using AspNet.MinimalApi.IdentityWithEmailConfirmationAuth.Extensions;
 using AspNet.MinimalApi.IdentityWithEmailConfirmationAuth.Models;
 using AspNet.MinimalApi.IdentityWithEmailConfirmationAuth.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;

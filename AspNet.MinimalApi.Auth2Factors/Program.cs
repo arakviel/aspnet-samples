@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Використовуємо InMemory базу для демо
 // В production використовуйте SQL Server, PostgreSQL тощо
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("Auth2FactorsDb"));
+    options.UseSqlite("Data Source=auth.db"));
 
 // ===== НАЛАШТУВАННЯ IDENTITY =====
 // Identity автоматично налаштовує всі необхідні сервіси для 2FA

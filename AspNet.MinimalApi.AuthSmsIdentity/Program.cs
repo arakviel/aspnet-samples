@@ -34,7 +34,8 @@ builder.Services.AddSwaggerGen(c =>
 
 // Налаштування бази даних (використовуємо InMemory для демо)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("AuthSmsIdentityDb"));
+    //options.UseInMemoryDatabase("AuthSmsIdentityDb"));
+    options.UseSqlite("Data Source=auth.db"));
 
 // Налаштування нативного Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

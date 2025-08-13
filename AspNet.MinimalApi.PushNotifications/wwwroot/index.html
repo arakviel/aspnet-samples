@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Push Notifications Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-192x192.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔔 Push Notifications Demo</h1>
+            <p>Демонстрація роботи з пуш-нотифікаціями використовуючи Push Protocol</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <h2>Статус підписки</h2>
+                <div id="subscription-status" class="status">
+                    <span class="status-indicator" id="status-indicator">⚪</span>
+                    <span id="status-text">Перевірка...</span>
+                </div>
+                <div class="button-group">
+                    <button id="subscribe-btn" class="btn btn-primary" disabled>Підписатися</button>
+                    <button id="unsubscribe-btn" class="btn btn-secondary" disabled>Відписатися</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Відправити тестову нотифікацію</h2>
+                <form id="notification-form">
+                    <div class="form-group">
+                        <label for="title">Заголовок:</label>
+                        <input type="text" id="title" name="title" value="Тестова нотифікація" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="body">Повідомлення:</label>
+                        <textarea id="body" name="body" rows="3" required>Це тестове повідомлення від Push Notifications Demo!</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="url">URL (опціонально):</label>
+                        <input type="url" id="url" name="url" placeholder="https://example.com">
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-success">📤 Відправити нотифікацію</button>
+                        <button type="button" id="send-test-btn" class="btn btn-outline">🧪 Тестова нотифікація</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Статистика</h2>
+                <div id="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Активних підписок:</span>
+                        <span id="subscription-count" class="stat-value">-</span>
+                    </div>
+                </div>
+                <button id="refresh-stats" class="btn btn-outline">🔄 Оновити статистику</button>
+            </div>
+
+            <div class="card">
+                <h2>Логи</h2>
+                <div id="logs" class="logs"></div>
+                <button id="clear-logs" class="btn btn-outline">🗑️ Очистити логи</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
