@@ -11,7 +11,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Auth;
 
 public static class Login
 {
-    public record Request(string UserName, string Password);
+    public record LoginRequest(string Email, string Password);
     public record Response(string AccessToken, string RefreshToken, DateTime ExpiresAtUtc);
 
     public class Endpoint : IEndpoint
@@ -24,9 +24,9 @@ public static class Login
         }
     }
 
-    public static async Task<IResult> Handler(Request request, UserManager<ApplicationUser> userManager, IConfiguration config, RefreshTokenService refreshTokenService)
+    public static async Task<IResult> Handler(LoginRequest request, UserManager<ApplicationUser> userManager, IConfiguration config, RefreshTokenService refreshTokenService)
     {
-        var user = await userManager.FindByNameAsync(request.UserName) ?? await userManager.FindByEmailAsync(request.UserName);
+        var user = await userManager.FindByEmailAsync(request.Email);
         if (user is null) return Results.Unauthorized();
         if (!await userManager.CheckPasswordAsync(user, request.Password)) return Results.Unauthorized();
 

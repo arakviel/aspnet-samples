@@ -12,12 +12,11 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration
+// DbContext
 var connectionString = builder.Configuration["POSTGRES_CONNECTION"] ??
                        builder.Configuration.GetConnectionString("Postgres") ??
                        "Host=localhost;Port=5432;Database=blogdb;Username=postgres;Password=postgres";
 
-// DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
@@ -32,7 +31,8 @@ builder.Services
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddSignInManager();
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
 
 // AuthZ policies
 builder.Services.AddAuthorization(options =>
@@ -46,6 +46,9 @@ builder.Services.AddScoped<IAuthorizationHandler, MinimumRegistrationDaysHandler
 
 // Реєструємо сервіс для роботи з рефреш токенами
 builder.Services.AddScoped<RefreshTokenService>();
+
+// Реєструємо Email сервіс
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // JWT Auth
 var jwtSection = builder.Configuration.GetSection("Jwt");
@@ -70,7 +73,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(policy =>
 {
-    policy.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+    policy.AddDefaultPolicy(p => p
+        .WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:3000") // Vite та інші dev сервери
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials());
 });
 
 // Add Swagger/OpenAPI
@@ -123,6 +130,47 @@ using (var scope = app.Services.CreateScope())
         admin = new ApplicationUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true, RegistrationDate = DateTime.UtcNow.AddDays(-10) };
         await userManager.CreateAsync(admin, "Admin@123");
         await userManager.AddToRoleAsync(admin, "Admin");
+    }
+
+    // Seed posts
+    if (!db.Posts.Any())
+    {
+        var posts = new[]
+        {
+            new Post
+            {
+                Title = "Ласкаво просимо до нашого блогу!",
+                Content = "Це перший пост у нашому блозі. Тут ви знайдете цікаві статті про технології, програмування та багато іншого. Ми раді вітати вас у нашій спільноті!",
+                Summary = "Вітальний пост для нових читачів блогу",
+                Tags = "вітання,блог,спільнота",
+                AuthorId = admin.Id,
+                CreatedDate = DateTime.UtcNow.AddDays(-5),
+                IsPublished = true
+            },
+            new Post
+            {
+                Title = "Введення в ASP.NET Core Minimal API",
+                Content = "ASP.NET Core Minimal API - це новий підхід до створення веб-API з мінімальною кількістю коду. У цій статті ми розглянемо основні концепції та переваги використання Minimal API для створення сучасних веб-додатків. Minimal API дозволяє швидко створювати легкі та продуктивні API з мінімальними налаштуваннями.",
+                Summary = "Огляд можливостей ASP.NET Core Minimal API",
+                Tags = "aspnet,minimal-api,веб-розробка",
+                AuthorId = admin.Id,
+                CreatedDate = DateTime.UtcNow.AddDays(-3),
+                IsPublished = true
+            },
+            new Post
+            {
+                Title = "Сучасний фронтенд з TypeScript",
+                Content = "TypeScript революціонізував розробку фронтенду, надавши статичну типізацію JavaScript. У цій статті ми розглянемо, як TypeScript допомагає створювати більш надійні та масштабовані додатки. Ми також обговоримо кращі практики використання TypeScript у сучасних фронтенд проектах.",
+                Summary = "Переваги використання TypeScript у фронтенд розробці",
+                Tags = "typescript,frontend,javascript",
+                AuthorId = admin.Id,
+                CreatedDate = DateTime.UtcNow.AddDays(-1),
+                IsPublished = true
+            }
+        };
+
+        db.Posts.AddRange(posts);
+        await db.SaveChangesAsync();
     }
 }
 

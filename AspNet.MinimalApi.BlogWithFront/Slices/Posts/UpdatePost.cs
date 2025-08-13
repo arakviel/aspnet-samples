@@ -10,7 +10,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Posts;
 /// </summary>
 public static class UpdatePost
 {
-    public record Request(string Title, string Content);
+    public record UpdatePostRequest(string Title, string Content);
 
     public class Endpoint : IEndpoint
     {
@@ -22,7 +22,7 @@ public static class UpdatePost
         }
     }
 
-    public static async Task<IResult> Handler(int id, Request request, AppDbContext db, ClaimsPrincipal user)
+    public static async Task<IResult> Handler(int id, UpdatePostRequest request, AppDbContext db, ClaimsPrincipal user)
     {
         var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null) return Results.Unauthorized();

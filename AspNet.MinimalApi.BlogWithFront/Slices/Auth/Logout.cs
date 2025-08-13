@@ -7,7 +7,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Auth;
 
 public static class Logout
 {
-    public record Request(string? RefreshToken = null);
+    public record LogoutRequest(string? RefreshToken = null);
     public record Response(string Message);
 
     public class Endpoint : IEndpoint
@@ -22,7 +22,7 @@ public static class Logout
     }
 
     public static async Task<IResult> Handler(
-        Request request, 
+        LogoutRequest request,
         RefreshTokenService refreshTokenService, 
         ClaimsPrincipal user)
     {

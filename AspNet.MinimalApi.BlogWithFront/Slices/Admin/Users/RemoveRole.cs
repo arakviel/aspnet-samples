@@ -9,7 +9,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Admin.Users;
 /// </summary>
 public static class RemoveRole
 {
-    public record Request(string UserId, string RoleName);
+    public record RemoveRoleRequest(string UserId, string RoleName);
 
     public class Endpoint : IEndpoint
     {
@@ -21,7 +21,7 @@ public static class RemoveRole
         }
     }
 
-    public static async Task<IResult> Handler(Request request, UserManager<ApplicationUser> userManager)
+    public static async Task<IResult> Handler(RemoveRoleRequest request, UserManager<ApplicationUser> userManager)
     {
         var user = await userManager.FindByIdAsync(request.UserId);
         if (user is null) return Results.NotFound("Користувача не знайдено");

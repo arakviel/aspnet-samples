@@ -10,7 +10,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Comments;
 
 public static class CreateComment
 {
-    public record Request(string Content);
+    public record CreateCommentRequest(string Content);
 
     public class Endpoint : IEndpoint
     {
@@ -22,7 +22,7 @@ public static class CreateComment
         }
     }
 
-    public static async Task<IResult> Handler(int postId, Request request, AppDbContext db, UserManager<ApplicationUser> userManager, ClaimsPrincipal user)
+    public static async Task<IResult> Handler(int postId, CreateCommentRequest request, AppDbContext db, UserManager<ApplicationUser> userManager, ClaimsPrincipal user)
     {
         var uid = user.FindFirstValue(ClaimTypes.NameIdentifier);
         if (uid is null) return Results.Unauthorized();

@@ -9,7 +9,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Admin.Users;
 /// </summary>
 public static class AssignRole
 {
-    public record Request(string UserId, string RoleName);
+    public record AssignRoleRequest(string UserId, string RoleName);
 
     public class Endpoint : IEndpoint
     {
@@ -21,7 +21,7 @@ public static class AssignRole
         }
     }
 
-    public static async Task<IResult> Handler(Request request, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public static async Task<IResult> Handler(AssignRoleRequest request, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         var user = await userManager.FindByIdAsync(request.UserId);
         if (user is null) return Results.NotFound("Користувача не знайдено");

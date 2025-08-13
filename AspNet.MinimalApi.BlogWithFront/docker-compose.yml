@@ -18,6 +18,7 @@ services:
   api:
     build: .
     environment:
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
       POSTGRES_CONNECTION: Host=db;Port=5432;Database=blogdb;Username=postgres;Password=postgres
     ports:

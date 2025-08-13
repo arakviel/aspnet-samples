@@ -11,7 +11,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Auth;
 
 public static class RefreshToken
 {
-    public record Request(string RefreshToken);
+    public record RefreshTokenRequest(string RefreshToken);
     public record Response(string AccessToken, string RefreshToken, DateTime ExpiresAtUtc);
 
     public class Endpoint : IEndpoint
@@ -25,7 +25,7 @@ public static class RefreshToken
     }
 
     public static async Task<IResult> Handler(
-        Request request, 
+        RefreshTokenRequest request,
         RefreshTokenService refreshTokenService, 
         UserManager<ApplicationUser> userManager, 
         IConfiguration config)

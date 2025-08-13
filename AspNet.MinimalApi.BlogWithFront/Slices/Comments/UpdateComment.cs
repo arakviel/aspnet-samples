@@ -10,7 +10,7 @@ namespace AspNet.MinimalApi.BlogWithFront.Slices.Comments;
 /// </summary>
 public static class UpdateComment
 {
-    public record Request(string Content);
+    public record UpdateCommentRequest(string Content);
 
     public class Endpoint : IEndpoint
     {
@@ -22,7 +22,7 @@ public static class UpdateComment
         }
     }
 
-    public static async Task<IResult> Handler(int id, Request request, AppDbContext db, ClaimsPrincipal user)
+    public static async Task<IResult> Handler(int id, UpdateCommentRequest request, AppDbContext db, ClaimsPrincipal user)
     {
         var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null) return Results.Unauthorized();
